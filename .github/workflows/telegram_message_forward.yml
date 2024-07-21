@@ -1,9 +1,13 @@
 name: Telegram Message Forwarder
 
 on:
-  #schedule:
-  #  - cron: '* * * * *'  # Runs every minute
+  schedule:
+    - cron: '*/330 * * * *'  # Every 5 hours and 30 minutes to avoid hitting the 6-hour limit
   workflow_dispatch:
+
+concurrency:
+  group: 'telegram-message-forwarder'
+  cancel-in-progress: true
 
 jobs:
   forward_messages:
