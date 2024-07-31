@@ -4,10 +4,13 @@ import sqlite3
 import requests
 from urllib.parse import urlparse, parse_qs
 from datetime import datetime, timedelta, timezone
+from dotenv import load_dotenv
 import re
 import logging
 import tweepy
 import os
+
+load_dotenv()
 
 # Configuration
 api_id = os.getenv('TELEGRAM_API_ID')
@@ -94,7 +97,11 @@ def extract_urls(message_text):
 
 def post_to_twitter(message_text):
     try:
-        cleaned_message = re.sub(r'\b[Ll]+[Oo]+[Oo]+[Tt]+\b', '', message_text, flags=re.IGNORECASE).strip()
+        cleaned_message = re.sub(r'\b[Ll]+[Oo]+[Oo]+[Tt]+\b', '', message_text, flags=re.IGNORECASE).strip()        
+        if len(cleaned_message) > 280:
+            logger.error("Error: Tweet exceeds 280 characters and will not be posted.")
+            return
+        
         client = tweepy.Client(consumer_key=twitter_creds['consumer_key'], 
                                consumer_secret=twitter_creds['consumer_secret'],
                                access_token=twitter_creds['access_token'], 
@@ -102,8 +109,12 @@ def post_to_twitter(message_text):
         response = client.create_tweet(text=cleaned_message)
         if response.errors:
             logger.error(f"Error posting to Twitter: {response.errors}")
-    except Exception as e:
+    except tweepy.TweepyException as e:
         logger.error(f"Error posting to Twitter: {e}")
+        client.send_message(error_notify, f"Error: {e}")
+    except Exception as e:
+        logger.error(f"Unexpected error when posting to Twitter: {e}")
+        client.send_message(error_notify, f"Error: {e}")
 
 @client.on(events.NewMessage(chats=source_channels))
 async def handler(event):
@@ -141,9 +152,12 @@ async def handler(event):
         await client.send_message(error_notify, f"Error: {e}")
 
 async def main():
-    await client.start()
-    logger.info("Userbot started!")
-    await client.run_until_disconnected()
+    try:
+        await client.start()
+        logger.info("Userbot started!")
+        await client.run_until_disconnected()
+    except Exception as e:
+        logger.error(f"Error in main function: {e}")
 
 with client:
     client.loop.run_until_complete(main())
