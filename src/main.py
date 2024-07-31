@@ -12,7 +12,7 @@ import os
 # Configuration
 api_id = os.getenv('TELEGRAM_API_ID')
 api_hash = os.getenv('TELEGRAM_API_HASH')
-source_channels = os.getenv('SOURCE').split(',')
+source_channels = [-1001562954261, -1001363680849, -1001315464303, -1001707571730]
 destination_chat = os.getenv('TARGET')
 twitter_channel = int(os.getenv('TWITTER_CHANNEL'))
 error_notify = os.getenv('ERROR_NOTIFY')
