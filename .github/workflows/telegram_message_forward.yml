@@ -2,7 +2,7 @@ name: Telegram Bot Script
 
 on:
   schedule:
-    - cron: '*/6 * * * *'  # Runs every 6 hours
+    - cron: '0 */6 * * *'  # Runs every 6 hours
   workflow_dispatch:
 
 concurrency:
