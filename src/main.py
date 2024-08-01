@@ -131,7 +131,7 @@ async def handler(event):
             return
         
         if channel_id == twitter_channel:
-            post_to_twitter(message_text)
+            await post_to_twitter(message_text)
             return
 
         urls = extract_urls(message_text)
