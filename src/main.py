@@ -102,11 +102,11 @@ def post_to_twitter(message_text):
             logger.error("Error: Tweet exceeds 280 characters and will not be posted.")
             return
         
-        client = tweepy.Client(consumer_key=twitter_creds['consumer_key'], 
+        twitter_client = tweepy.Client(consumer_key=twitter_creds['consumer_key'], 
                                consumer_secret=twitter_creds['consumer_secret'],
                                access_token=twitter_creds['access_token'], 
                                access_token_secret=twitter_creds['access_token_secret'])
-        response = client.create_tweet(text=cleaned_message)
+        response = twitter_client.create_tweet(text=cleaned_message)
         if response.errors:
             logger.error(f"Error posting to Twitter: {response.errors}")
     except tweepy.TweepyException as e:
