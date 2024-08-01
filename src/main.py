@@ -95,7 +95,7 @@ def is_duplicate_message(new_product_id, time_limit):
 def extract_urls(message_text):
     return re.findall(r'(https?://\S+)', message_text)
 
-def post_to_twitter(message_text):
+async def post_to_twitter(message_text):
     try:
         cleaned_message = re.sub(r'\b[Ll]+[Oo]+[Oo]+[Tt]+\b', '', message_text, flags=re.IGNORECASE).strip()        
         if len(cleaned_message) > 280:
