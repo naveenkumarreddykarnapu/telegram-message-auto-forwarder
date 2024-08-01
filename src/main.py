@@ -53,7 +53,7 @@ conn, cursor = init_db()
 
 def extract_product_id(url):
     try:
-        response = requests.get(url, allow_redirects=True, timeout=10)
+        response = requests.get(url, allow_redirects=True, timeout=20)
         final_url = response.url
         parsed_url = urlparse(final_url)
         path_segments = parsed_url.path.split('/')
