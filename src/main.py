@@ -111,10 +111,10 @@ def post_to_twitter(message_text):
             logger.error(f"Error posting to Twitter: {response.errors}")
     except tweepy.TweepyException as e:
         logger.error(f"Error posting to Twitter: {e}")
-        client.send_message(error_notify, f"Error: {e}")
+        await client.send_message(error_notify, f"Error: {e}")
     except Exception as e:
         logger.error(f"Unexpected error when posting to Twitter: {e}")
-        client.send_message(error_notify, f"Error: {e}")
+        await client.send_message(error_notify, f"Error: {e}")
 
 @client.on(events.NewMessage(chats=source_channels))
 async def handler(event):
