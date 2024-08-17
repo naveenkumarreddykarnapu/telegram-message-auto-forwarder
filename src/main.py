@@ -110,8 +110,11 @@ async def post_to_twitter(message_text):
         if response.errors:
             logger.error(f"Error posting to Twitter: {response.errors}")
     except tweepy.TweepyException as e:
-        logger.error(f"Error posting to Twitter: {e}")
-        await client.send_message(error_notify, f"Error: {e}")
+        if hasattr(e, 'response') and e.response is not None and e.response.status_code == 429:
+            logger.warning("Rate limit exceeded.")
+        else:
+            logger.error(f"Error posting to Twitter: {e}")
+            await client.send_message(error_notify, f"Error: {e}")
     except Exception as e:
         logger.error(f"Unexpected error when posting to Twitter: {e}")
         await client.send_message(error_notify, f"Error: {e}")
