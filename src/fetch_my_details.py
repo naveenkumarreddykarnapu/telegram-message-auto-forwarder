@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from telethon import TelegramClient
+from telethon.tl.types import User
 
 # Load environment variables from .env file
 load_dotenv()
@@ -19,8 +20,8 @@ async def print_verification_messages():
 
     # Get a list of your dialogs (chats and messages)
     async for dialog in client.iter_dialogs():
-        # Check if the dialog is with the official Telegram bot (can use bot username or ID)
-        if dialog.name == "Telegram" or dialog.entity.bot:  # "Telegram" is typically the bot's display name
+        # Check if the dialog is with the official Telegram bot (based on name or user type)
+        if isinstance(dialog.entity, User) and dialog.name == "Telegram":  # "Telegram" is typically the bot's display name
             print(f"Found chat with Telegram Bot: {dialog.name}")
 
             # Fetch and print the last 10 messages from the Telegram bot
